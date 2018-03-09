@@ -1,8 +1,11 @@
 import requests
 import json
 import os
+import time
 
 os.system('cls')
+API_REQUEST_INTERVAL = 10       # time interval between two concicutive requests 
+last_time = 0
 #################################
 while(True):
 	# Accepting input from the user and a little sanitization is done
@@ -11,10 +14,12 @@ while(True):
 		currency = currency.upper()
 
 		# Getting all the Crypto Information using Coinmarketcap api
-		api_request = requests.get("https://api.coinmarketcap.com/v1/ticker/")
-		api = json.loads(api_request.content.decode('utf-8'))
-
-		found = 0
+		# The time interval between two api requests are limitted using API_REQUEST_INTERVAL variable 
+		if time.time() - last_time >= API_REQUEST_INTERVAL:
+			api_request = requests.get("https://api.coinmarketcap.com/v1/ticker/")
+			api = json.loads(api_request.content.decode('utf-8'))
+			last_time =time.time()
+			found = 0
 
 		# Looping through the list in api
 		for x in api:
