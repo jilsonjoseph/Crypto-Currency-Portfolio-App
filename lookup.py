@@ -14,10 +14,12 @@ root.iconbitmap(r'BTC.ico')
 #################### CREATING HEADER ######################
 def pack_header(header):
 	for field in header:
-		header_field = Label(root, text = field, bg = ("white","silver")[bool(header.index(field)%2)], font ="Verdana 8 bold" )
+		i = 0
+		header_field = Label(root, text = field, bg = ("white","silver")[bool(i%2)], font ="Verdana 10 bold" )
 		header_field.grid(row = 0, column = header.index(field), sticky=N+S+E+W)
+		i += 1
 
-header = ["Name", "Rank", "Price", "Change 1H", "Change 24H", "Change 1D", "Market Cap", "Total Paid" ,"Current","Profit/Loss"]
+header = ["Name", "Rank", "Price", "Change 1H", "Change 24H", "Change 1D", "Market Cap"]
 
 pack_header(header)
 
@@ -36,8 +38,10 @@ pack_header(header)
 
 def pack_values(row,values_list):
 	for value in values_list:
-		values_field = Label(root, text = value, bg = ("white","silver")[bool(values_list.index(value)%2)], font ="Verdana 8 bold" )
+		i = 0
+		values_field = Label(root, text = value, bg = ("white","silver")[bool(i%2)] )
 		values_field.grid(row = row, column = values_list.index(value), sticky=N+S+E+W)
+		i += 1
 
 
 
@@ -45,8 +49,11 @@ def pack_values(row,values_list):
 
 def lookup():
 
+#	def get_crypto_info_list():
 	api_request = requests.get("https://api.coinmarketcap.com/v1/ticker/")
-	api = json.loads(api_request.content.decode('utf-8'))
+	crypto_info_list = json.loads(api_request.content.decode('utf-8'))
+
+#	get_crypto_info_list()
 	# My Portfolio
 	my_portfolio = [
 		{
@@ -69,19 +76,29 @@ def lookup():
 	]
 	portfolio_profit_loss = 0
 	i = 1
-	for x in api:
-		for coin in my_portfolio:
-			if coin["symbol"] == x["symbol"]:
+	for coin in crypto_info_list:
+		for my_coin in my_portfolio:
+			if my_coin["symbol"] == coin["symbol"]:
 
-				total_paid = coin["amount_owned"] * coin["price_paid_per_coin_usd"]
-				current_value = coin["amount_owned"] * float(x["price_usd"])
-				profit_loss = current_value - total_paid
-				portfolio_profit_loss += profit_loss
-				profit_loss_per_coin = float(x["price_usd"]) - coin["price_paid_per_coin_usd"]
+				name = coin["name"]
+				rank = int(coin["rank"])
+				price = float(coin["price_usd"])
+				change_1h = float(coin["percent_change_1h"])
+				change_24h = float(coin["percent_change_24h"])
+				change_7d = float(coin["percent_change_7d"])
+				market_cap = coin["market_cap_usd"]
 
-				values_list = [x["name"], x["rank"], x["price_usd"], x["percent_change_1h"], x["percent_change_24h"]]
-				values_list.extend([x["percent_change_7d"], x["market_cap_usd"], "${0:.0f}".format(float(total_paid))]) 
-				values_list.extend(["${0:.0f}".format(float(current_value)), "${0:.4f}".format(float(profit_loss_per_coin))])
+
+
+
+				#total_paid = coin["amount_owned"] * coin["price_paid_per_coin_usd"]
+				#current_value = coin["amount_owned"] * float(x["price_usd"])
+				#profit_loss = current_value - total_paid
+				#portfolio_profit_loss += profit_loss
+				#profit_loss_per_coin = float(x["price_usd"]) - coin["price_paid_per_coin_usd"]
+
+				values_list = [name, rank, "${0:.4f}".format(price), "{0:.2f}%".format(change_1h),"{0:.2f}%".format(change_24h), "{0:.2f}%".format(change_7d), market_cap]
+				#values_list.extend(["${0:.0f}".format(float(total_paid)), "${0:.0f}".format(float(current_value)), "${0:.4f}".format(float(profit_loss_per_coin))])
 				pack_values(i,values_list)
 				i += 1
 
