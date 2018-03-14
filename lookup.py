@@ -7,21 +7,45 @@ os.system('cls')
 
 root = Tk()
 
+def change_color(value):
+	if value >= 0:
+		return "green"
+	else: 
+		return "red"
+
 
 root.title("Crypto Currency Portfolio")
 root.iconbitmap(r'BTC.ico')
 
 #################### CREATING HEADER ######################
-def pack_header(header):
-	for field in header:
-		i = 0
-		header_field = Label(root, text = field, bg = ("white","silver")[bool(i%2)], font ="Verdana 10 bold" )
-		header_field.grid(row = 0, column = header.index(field), sticky=N+S+E+W)
-		i += 1
+#def pack_header(header):
+#	for field in header:
+#		i = 0
+header_field = Label(root, text = "Name", bg = "white", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 0, sticky=N+S+E+W)
 
-header = ["Name", "Rank", "Price", "Change 1H", "Change 24H", "Change 1D", "Market Cap"]
+header_field = Label(root, text = "Rank", bg = "silver", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 1, sticky=N+S+E+W)
 
-pack_header(header)
+header_field = Label(root, text = "Price", bg = "white", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 2, sticky=N+S+E+W)
+
+header_field = Label(root, text = "1H Change", bg = "silver", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 3, sticky=N+S+E+W)
+
+header_field = Label(root, text = "24H Change", bg = "white", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 4, sticky=N+S+E+W)
+
+header_field = Label(root, text = "1Day Change", bg = "silver", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 5, sticky=N+S+E+W)
+
+header_field = Label(root, text = "Market Cap", bg = "white", font ="Verdana 10 bold" )
+header_field.grid(row = 0, column = 6, sticky=N+S+E+W)
+#		i += 1
+
+#header = ["Name", "Rank", "Price", "Change 1H", "Change 24H", "Change 1D", "Market Cap"]
+
+#pack_header(header)
 
 #pack_to_header("Name", 0, "white")
 #pack_to_header("Rank", 1, "silver")
@@ -36,12 +60,11 @@ pack_header(header)
 
 ################### END OF HEADER ##########################
 
-def pack_values(row,values_list):
-	for value in values_list:
-		i = 0
-		values_field = Label(root, text = value, bg = ("white","silver")[bool(i%2)] )
-		values_field.grid(row = row, column = values_list.index(value), sticky=N+S+E+W)
-		i += 1
+#def pack_values(row,values_list):
+#	for value in values_list:
+#		values_field = Label(root, text = value, bg = ("white","silver")[bool(i%2)] )
+#		values_field.grid(row = row, column = values_list.index(value), sticky=N+S+E+W)
+#		i += 1
 
 
 
@@ -72,6 +95,24 @@ def lookup():
 			"symbol": "XRP",
 			"amount_owned": 1000,
 			"price_paid_per_coin_usd": .8,
+		},
+
+		{
+			"symbol": "XLM",
+			"amount_owned": 1000,
+			"price_paid_per_coin_usd": .8,
+		},
+
+		{
+			"symbol": "NEO",
+			"amount_owned": 1000,
+			"price_paid_per_coin_usd": .8,
+		},
+
+		{
+			"symbol": "DASH",
+			"amount_owned": 1000,
+			"price_paid_per_coin_usd": .8,
 		}
 	]
 	portfolio_profit_loss = 0
@@ -97,10 +138,33 @@ def lookup():
 				#portfolio_profit_loss += profit_loss
 				#profit_loss_per_coin = float(x["price_usd"]) - coin["price_paid_per_coin_usd"]
 
-				values_list = [name, rank, "${0:.4f}".format(price), "{0:.2f}%".format(change_1h),"{0:.2f}%".format(change_24h), "{0:.2f}%".format(change_7d), market_cap]
+				#values_list = [name, rank, "${0:.4f}".format(price), "{0:.2f}%".format(change_1h),"{0:.2f}%".format(change_24h), "{0:.2f}%".format(change_7d), market_cap]
 				#values_list.extend(["${0:.0f}".format(float(total_paid)), "${0:.0f}".format(float(current_value)), "${0:.4f}".format(float(profit_loss_per_coin))])
-				pack_values(i,values_list)
-				i += 1
+				#pack_values(i,values_list)
+				#i += 1
+
+				values_field = Label(root, text = name, bg = "white" )
+				values_field.grid(row = i, column = 0, sticky=N+S+E+W)
+
+				values_field = Label(root, text = coin["rank"], bg = "silver" )
+				values_field.grid(row = i, column = 1, sticky=N+S+E+W)
+
+				values_field = Label(root, text = "${0:.4f}".format(price), bg = "white" )
+				values_field.grid(row = i, column = 2, sticky=N+S+E+W)
+
+				values_field = Label(root, text = "{0:.2f}%".format(change_1h), bg = "silver", fg = change_color(change_1h) )
+				values_field.grid(row = i, column = 3, sticky=N+S+E+W)
+
+				values_field = Label(root, text = "{0:.2f}%".format(change_24h), bg = "white", fg = change_color(change_24h) )
+				values_field.grid(row = i, column = 4, sticky=N+S+E+W)
+
+				values_field = Label(root, text = "{0:.2f}%".format(change_7d), bg = "silver", fg = change_color(change_7d) )
+				values_field.grid(row = i, column = 5, sticky=N+S+E+W)
+
+				values_field = Label(root, text = market_cap, bg = "white" )
+				values_field.grid(row = i, column = 6, sticky=N+S+E+W)		
+
+				i += 1		
 
 				#print("---------------------")
 				#print(x["name"])
